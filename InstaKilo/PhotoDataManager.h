@@ -26,6 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)changeSortType:(enum SORT_TYPE)sortType;
 -(NSString*)getHeaderTitleForSection:(NSInteger)section;
 -(NSInteger)getNumberOfSections;
+-(NSInteger)getNumberOfCellsForSection:(NSInteger) section;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -29,6 +29,40 @@
     self.collectionView.dataSource = self;
     [self setUpLayout];
     self.collectionView.collectionViewLayout = self.myLayout;
+    
+    self.collectionView.dragInteractionEnabled = YES;
+    self.collectionView.dragDelegate = self;
+}
+- (NSArray<UIDragItem *> *)collectionView:(UICollectionView *)collectionView
+             itemsForBeginningDragSession:(id<UIDragSession>)session
+                              atIndexPath:(NSIndexPath *)indexPath{
+    NSLog(@"begin dragging");
+    
+    UICollectionViewCell *item = [self.collectionView cellForItemAtIndexPath:indexPath];
+    NSItemProvider *itemProvider = [[NSItemProvider alloc]initWithObject:item];
+    UIDragItem *dragItem = [[UIDragItem alloc]initWithItemProvider:itemProvider];
+    dragItem.localObject = item;
+    return dragItem;
+    
+}
+
+//    let item = self.items[indexPath.row]
+//    let itemProvider = NSItemProvider(object: item as NSString)
+//    let dragItem = UIDragItem(itemProvider: itemProvider)
+//    dragItem.localObject = item
+//    return [dragItem]
+
+- (IBAction)switchAllPhotos:(id)sender {
+    [self.photoDataManager changeSortType:ALL];
+    [self.collectionView reloadData];
+}
+- (IBAction)switchLocationPhotos:(id)sender {
+    [self.photoDataManager changeSortType:LOCATION];
+    [self.collectionView reloadData];
+}
+- (IBAction)switchTagPhotos:(id)sender {
+    [self.photoDataManager changeSortType:TAGS];
+    [self.collectionView reloadData];
 }
 -(void)setUpLayout{
     self.myLayout = [[UICollectionViewFlowLayout alloc] init];
@@ -42,7 +76,7 @@
 
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     
-    return self.photoDataManager.allPhotos.count;
+    return [self.photoDataManager getNumberOfCellsForSection:section];
 }
 
 - (nonnull __kindof UICollectionViewCell *)collectionView:(nonnull UICollectionView *)collectionView
